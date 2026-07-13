@@ -130,7 +130,9 @@
   .modal-overlay.open .modal-box{ transform:translateY(0) scale(1); }
   @media (min-width:1000px){ .modal-box{ margin:34px auto; min-height:auto; border-radius:16px; overflow:hidden; } }
 
-  .modal-hero{ position:relative; aspect-ratio:16/8; min-height:320px; display:flex; align-items:flex-end; background-size:cover; }
+  .modal-hero{ position:relative; aspect-ratio:16/8; min-height:320px; display:flex; align-items:flex-end; background-size:cover; overflow:hidden; }
+  .modal-hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none; }
+  .modal-hero-video.active{ display:block; }
   .modal-hero::after{ content:""; position:absolute; inset:0; background:linear-gradient(to top, var(--bg) 2%, rgba(10,10,20,0.15) 45%, rgba(10,10,20,0.55) 100%); }
   .modal-close{ position:absolute; top:16px; right:16px; z-index:5; width:36px; height:36px; border-radius:50%; border:none; background:rgba(10,10,20,0.55); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.15s ease; }
   .modal-close:hover{ background:rgba(10,10,20,0.85); }
@@ -362,7 +364,7 @@
     <div class="row-head"><h2>Top shoots this year</h2></div>
     <div class="top10-row">
       <div class="top10-item" data-title="Aarav &amp; Meera" data-meta="2026 · Udaipur · Full Wedding Film · 4K" data-desc="A documentary-style edit of a three-day wedding — candid coverage, no staged re-shoots, edited by hand from start to finish." data-tags="Documentary,Cinematic,Candid" data-pills="Full Coverage,Drone Footage,Traditional Rituals" data-cta="Watch full film" data-thumb="c1"><span class="top10-rank">1</span><div class="thumb c1"></div></div>
-      <div class="top10-item" data-title="Ritu &amp; Kabir" data-meta="2025 · Goa · Highlight Film" data-desc="Sea breeze, string lights, and a ceremony shot entirely handheld to stay close to the moment." data-tags="Beach Wedding,Highlight Film,Destination" data-pills="Destination,Handheld,Candid" data-cta="Watch highlight film" data-thumb="c2"><span class="top10-rank">2</span><div class="thumb c2"></div></div>
+      <div class="top10-item" data-title="Ritu &amp; Kabir" data-meta="2025 · Goa · Highlight Film" data-desc="Sea breeze, string lights, and a ceremony shot entirely handheld to stay close to the moment." data-tags="Beach Wedding,Highlight Film,Destination" data-pills="Destination,Handheld,Candid" data-cta="Watch highlight film" data-thumb="c2" data-video="https://www.w3schools.com/html/mov_bbb.mp4"><span class="top10-rank">2</span><div class="thumb c2"></div></div>
       <div class="top10-item" data-title="Priya &amp; Dev" data-meta="2025 · Jaipur · Full Wedding Film" data-desc="Three generations, one courtyard, and a film cut to feel exactly like being there." data-tags="Haveli Wedding,Traditional,Full Film" data-pills="Traditional Rituals,Multi-day,Candid" data-cta="Watch full film" data-thumb="c3"><span class="top10-rank">3</span><div class="thumb c3"></div></div>
       <div class="top10-item" data-title="Reception night" data-meta="2025 · Full Film · 04:12 · 4K" data-desc="The dance floor, the toasts, and the 2 a.m. dhol circle — the full cut of the night as it happened." data-tags="Reception,Full Film,4K" data-pills="Full Coverage,Low Light,Multi-cam" data-cta="Watch full film" data-thumb="c4"><span class="top10-rank">4</span><div class="thumb c4"></div></div>
       <div class="top10-item" data-title="Engagement session" data-meta="Warangal · Engagement" data-desc="A relaxed engagement shoot around the old quarter of the city." data-tags="Engagement,Portrait,Candid" data-pills="Candid,Natural Light,Relaxed Pace" data-cta="Watch the reel" data-thumb="c7"><span class="top10-rank">5</span><div class="thumb c7"></div></div>
@@ -376,7 +378,7 @@
       <button class="edge-arrow right" data-target="weddingsRow" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="card-row" id="weddingsRow">
         <div class="card" data-title="Aarav &amp; Meera" data-meta="2026 · Udaipur · Full Wedding Film · 4K" data-desc="A documentary-style edit of a three-day wedding — candid coverage, no staged re-shoots, edited by hand from start to finish." data-tags="Documentary,Cinematic,Candid" data-pills="Full Coverage,Drone Footage,Traditional Rituals" data-cta="Watch full film" data-thumb="c1"><div class="thumb c1"><span class="badge">FEATURED</span><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Aarav &amp; Meera</div><div class="sub">Udaipur · 2026</div></div></div>
-        <div class="card" data-title="Ritu &amp; Kabir" data-meta="2025 · Goa · Highlight Film" data-desc="Sea breeze, string lights, and a ceremony shot entirely handheld to stay close to the moment." data-tags="Beach Wedding,Highlight Film,Destination" data-pills="Destination,Handheld,Candid" data-cta="Watch highlight film" data-thumb="c2"><div class="thumb c2"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Ritu &amp; Kabir</div><div class="sub">Goa · 2025</div></div></div>
+        <div class="card" data-title="Ritu &amp; Kabir" data-meta="2025 · Goa · Highlight Film" data-desc="Sea breeze, string lights, and a ceremony shot entirely handheld to stay close to the moment." data-tags="Beach Wedding,Highlight Film,Destination" data-pills="Destination,Handheld,Candid" data-cta="Watch highlight film" data-thumb="c2" data-video="https://www.w3schools.com/html/mov_bbb.mp4"><div class="thumb c2"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Ritu &amp; Kabir</div><div class="sub">Goa · 2025</div></div></div>
         <div class="card" data-title="Priya &amp; Dev" data-meta="2025 · Jaipur · Full Wedding Film" data-desc="Three generations, one courtyard, and a film cut to feel exactly like being there." data-tags="Haveli Wedding,Traditional,Full Film" data-pills="Traditional Rituals,Multi-day,Candid" data-cta="Watch full film" data-thumb="c3"><div class="thumb c3"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Priya &amp; Dev</div><div class="sub">Jaipur · 2025</div></div></div>
         <div class="card" data-title="Reception night" data-meta="2025 · Full Film · 04:12 · 4K" data-desc="The dance floor, the toasts, and the 2 a.m. dhol circle — the full cut of the night as it happened." data-tags="Reception,Full Film,4K" data-pills="Full Coverage,Low Light,Multi-cam" data-cta="Watch full film" data-thumb="c4"><div class="thumb c4"><span class="badge">4K</span><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Reception night</div><div class="sub">Full film · 04:12</div></div></div>
       </div>
@@ -474,6 +476,7 @@
 <div class="modal-overlay" id="detailModal">
   <div class="modal-box">
     <div class="modal-hero" id="modalHero">
+      <video class="modal-hero-video" id="modalVideo" muted autoplay loop playsinline></video>
       <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="modal-hero-inner">
         <div class="modal-badge">Studio Frame</div>
@@ -585,6 +588,7 @@
   /* ---------- DETAIL MODAL ---------- */
   const detailModal = document.getElementById('detailModal');
   const modalHero = document.getElementById('modalHero');
+  const modalVideo = document.getElementById('modalVideo');
   const modalClose = document.getElementById('modalClose');
   const modalTitle = document.getElementById('modalTitle');
   const modalMeta = document.getElementById('modalMeta');
@@ -608,6 +612,21 @@
   function openModalFromEl(el){
     const d = el.dataset;
     modalHero.className = 'modal-hero ' + (d.thumb || 'c1');
+
+    if (d.video) {
+      if (modalVideo.getAttribute('src') !== d.video) {
+        modalVideo.setAttribute('src', d.video);
+      }
+      modalVideo.classList.add('active');
+      modalVideo.currentTime = 0;
+      modalVideo.play().catch(() => {});
+    } else {
+      modalVideo.pause();
+      modalVideo.removeAttribute('src');
+      modalVideo.load();
+      modalVideo.classList.remove('active');
+    }
+
     modalTitle.innerHTML = d.title || '';
     modalMeta.textContent = d.meta || '';
     modalDesc.textContent = d.desc || '';
@@ -656,6 +675,10 @@
   function closeModal(){
     detailModal.classList.remove('open');
     document.body.classList.remove('modal-locked');
+    modalVideo.pause();
+    modalVideo.removeAttribute('src');
+    modalVideo.load();
+    modalVideo.classList.remove('active');
   }
 
   collectCardEls().forEach(el => {
