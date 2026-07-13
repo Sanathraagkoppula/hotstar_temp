@@ -40,7 +40,7 @@
   a{ color:inherit; text-decoration:none; }
 
   /* ---------- NAV ---------- */
-  header{ display:flex; align-items:center; justify-content:space-between; padding:18px 44px; position:sticky; top:0; z-index:30; background:linear-gradient(to bottom, rgba(10,10,20,0.95), rgba(10,10,20,0.6)); backdrop-filter:blur(6px); box-shadow:0 1px 0 0 rgba(139,63,232,0.25); }
+  header{ display:flex; align-items:center; justify-content:space-between; padding:18px 44px; position:sticky; top:0; z-index:30; background:linear-gradient(to bottom, rgba(10,10,20,0.95), rgba(10,10,20,0.6)); backdrop-filter:blur(6px); }
   .brand{ display:flex; align-items:center; gap:9px; }
   .brand .mark{ width:22px; height:22px; border-radius:6px; background:var(--grad); flex-shrink:0; }
   .brand span{ font-family:'Poppins', sans-serif; font-weight:700; font-size:17px; letter-spacing:0.2px; }
@@ -195,7 +195,6 @@
   /* ---------- ABOUT (profile card style) ---------- */
   #about{ padding:20px 44px 50px; }
   .about-card{ position:relative; background:var(--bg-elevated); border-radius:16px; padding:36px; display:grid; grid-template-columns:40% 1fr; gap:40px; align-items:start; overflow:hidden; }
-  .about-card::before{ content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--grad); }
   .avatar{ width:100%; aspect-ratio:1/1; border-radius:14px; background:var(--grad); background-size:cover; background-position:center; box-shadow:0 16px 40px rgba(0,0,0,0.45); }
   .about-card h2{ font-family:'Poppins', sans-serif; font-weight:600; font-size:20px; margin-bottom:8px; }
   .about-card p{ font-size:13.5px; color:var(--text-secondary); line-height:1.75; max-width:600px; }
@@ -240,6 +239,22 @@
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     .card, .card .thumb, .card .thumb .play, .top10-item .thumb, .btn-primary, .btn-secondary, .submit-btn{ transition:none; }
+  }
+
+  /* ---------- SCROLL REVEAL ---------- */
+  .reveal{ opacity:0; translate:0 44px; transition:opacity 0.7s cubic-bezier(.2,.8,.2,1), translate 0.7s cubic-bezier(.2,.8,.2,1); }
+  .reveal.visible{ opacity:1; translate:0 0; }
+  .reveal-stagger > *{ opacity:0; translate:0 40px; transition:opacity 0.6s cubic-bezier(.2,.8,.2,1), translate 0.6s cubic-bezier(.2,.8,.2,1); }
+  .reveal-stagger.visible > *{ opacity:1; translate:0 0; }
+  .reveal-stagger.visible > *:nth-child(1){ transition-delay:0s; }
+  .reveal-stagger.visible > *:nth-child(2){ transition-delay:0.08s; }
+  .reveal-stagger.visible > *:nth-child(3){ transition-delay:0.16s; }
+  .reveal-stagger.visible > *:nth-child(4){ transition-delay:0.24s; }
+  .reveal-stagger.visible > *:nth-child(5){ transition-delay:0.32s; }
+  .reveal-stagger.visible > *:nth-child(6){ transition-delay:0.4s; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .reveal-stagger > *{ opacity:1; translate:0 0; transition:none; }
   }
 
   @media (max-width: 860px){
@@ -735,6 +750,21 @@
       document.querySelectorAll('.modal-panel').forEach((p, j) => p.classList.toggle('active', j === i));
     });
   });
+
+  /* ---------- SCROLL REVEAL ---------- */
+  document.querySelectorAll('.row-head, .about-card, .cta-band, footer').forEach(el => el.classList.add('reveal'));
+  document.querySelectorAll('.card-row, .top10-row, .software-grid').forEach(el => el.classList.add('reveal-stagger'));
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => revealObserver.observe(el));
 </script>
 
 </body>
