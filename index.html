@@ -250,9 +250,12 @@
 
     footer{ padding:20px 22px; justify-content:center; text-align:center; }
 
-    .modal-box{ min-height:100dvh; }
-    .modal-hero{ aspect-ratio:auto; min-height:44vh; }
+    .modal-overlay{ align-items:flex-end; }
+    .modal-box{ min-height:0; max-height:92vh; border-radius:20px 20px 0 0; overflow-y:auto; -webkit-overflow-scrolling:touch; transform:translateY(100%); box-shadow:0 -10px 40px rgba(0,0,0,0.5); }
+    .modal-overlay.open .modal-box{ transform:translateY(0); }
+    .modal-hero{ aspect-ratio:auto; min-height:38vh; border-radius:20px 20px 0 0; overflow:hidden; }
     .modal-hero-inner{ padding:20px 22px 22px; }
+    .modal-close{ top:14px; right:14px; background:rgba(10,10,20,0.6); }
     .modal-tabs{ padding:18px 22px 0; gap:20px; }
     .modal-panel{ padding:18px 22px 32px; }
     .modal-more-grid{ grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; }
