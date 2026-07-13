@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Studio Frame — Wedding Photography &amp; Film</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +22,8 @@
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; }
-  body{ background:var(--bg); color:var(--text-primary); font-family:'Inter', sans-serif; }
+  html{ scroll-behavior:smooth; overflow-x:hidden; }
+  body{ background:var(--bg); color:var(--text-primary); font-family:'Inter', sans-serif; overflow-x:hidden; }
   a{ color:inherit; text-decoration:none; }
 
   /* ---------- NAV ---------- */
@@ -34,6 +34,13 @@
   nav{ display:flex; align-items:center; gap:26px; font-family:'Poppins', sans-serif; font-size:13px; font-weight:500; color:var(--text-secondary); }
   nav a:hover{ color:var(--text-primary); }
   .enquire-btn{ font-family:'Poppins', sans-serif; font-size:13px; font-weight:600; color:#fff; background:var(--grad); padding:9px 20px; border-radius:8px; }
+  .nav-toggle{ display:none; width:38px; height:38px; align-items:center; justify-content:center; background:none; border:none; color:var(--text-primary); cursor:pointer; z-index:41; flex-shrink:0; }
+  .nav-toggle svg{ width:22px; height:22px; }
+  .nav-toggle .icon-close{ display:none; }
+  .nav-toggle[aria-expanded="true"] .icon-burger{ display:none; }
+  .nav-toggle[aria-expanded="true"] .icon-close{ display:block; }
+  .nav-scrim{ display:none; position:fixed; inset:0; background:rgba(4,4,8,0.6); z-index:39; opacity:0; pointer-events:none; transition:opacity 0.25s ease; }
+  .nav-scrim.open{ opacity:1; pointer-events:auto; }
 
   /* ---------- HERO BANNER (autoplay crossfade) ---------- */
   #hero{ position:relative; min-height:78vh; display:flex; align-items:flex-end; overflow:hidden; }
@@ -53,8 +60,9 @@
   .top10-row::-webkit-scrollbar{ display:none; }
   .top10-item{ flex:0 0 auto; display:flex; align-items:flex-end; cursor:pointer; }
   .top10-rank{ position:relative; z-index:0; font-family:'Poppins', sans-serif; font-weight:700; font-size:135px; line-height:1; color:transparent; -webkit-text-stroke:2.5px rgba(245,244,250,0.5); margin-right:-16px; user-select:none; }
-  .top10-item .thumb{ width:360px; aspect-ratio:16/9; border-radius:14px; position:relative; z-index:1; box-shadow:0 10px 30px rgba(0,0,0,0.55); transition:transform 0.2s ease; }
-  .top10-item:hover .thumb{ transform:translateY(-4px); }
+  .top10-item .thumb{ width:460px; aspect-ratio:16/9; border-radius:14px; position:relative; z-index:1; box-shadow:0 10px 30px rgba(0,0,0,0.55); transition:transform 0.28s cubic-bezier(.2,.8,.2,1), box-shadow 0.28s ease; transform-origin:center center; }
+  .top10-item:hover{ z-index:6; }
+  .top10-item:hover .thumb{ transform:scale(1.1) translateY(-6px); box-shadow:0 20px 44px rgba(0,0,0,0.65); }
   .hero-badge{ display:inline-flex; align-items:center; gap:6px; font-family:'Poppins', sans-serif; font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; background:var(--grad); padding:5px 12px; border-radius:20px; margin-bottom:18px; }
   h1{ font-family:'Poppins', sans-serif; font-weight:700; font-size:clamp(32px, 5vw, 52px); line-height:1.1; margin-bottom:14px; }
   .hero-meta{ display:flex; gap:14px; align-items:center; font-size:12.5px; color:var(--text-secondary); margin-bottom:18px; }
@@ -86,11 +94,12 @@
   .row-scroll-wrap:hover .edge-arrow{ opacity:1; }
   .edge-arrow svg{ width:26px; height:26px; }
   .edge-arrow:focus-visible{ opacity:1; outline:2px solid var(--pink); outline-offset:-4px; }
-  .card{ flex:0 0 auto; width:360px; cursor:pointer; }
-  .card .thumb{ aspect-ratio:16/9; border-radius:14px; position:relative; overflow:hidden; transition:transform 0.2s ease; }
+  .card{ flex:0 0 auto; width:460px; cursor:pointer; position:relative; transition:transform 0.28s cubic-bezier(.2,.8,.2,1); transform-origin:center center; }
+  .card .thumb{ aspect-ratio:16/9; border-radius:14px; position:relative; overflow:hidden; transition:box-shadow 0.28s ease; }
   .card.portrait{ width:260px; }
   .card.portrait .thumb{ aspect-ratio:9/16; }
-  .card:hover .thumb{ transform:scale(1.04); }
+  .card:hover{ transform:scale(1.1); z-index:8; }
+  .card:hover .thumb{ box-shadow:0 18px 44px rgba(0,0,0,0.65); }
   .card .thumb .play{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(10,10,20,0); transition:background 0.2s ease; opacity:0; }
   .card:hover .thumb .play{ opacity:1; background:rgba(10,10,20,0.35); }
   .card .thumb .play svg{ width:34px; height:34px; }
@@ -108,12 +117,65 @@
   .c7{ background:linear-gradient(150deg,#5a2a70,#1e1230); }
   .c8{ background:linear-gradient(150deg,#2a5a54,#0f1f1c); }
 
-  .more-thumb{ background:linear-gradient(160deg, var(--blue) 0%, var(--purple) 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; transition:transform 0.2s ease; }
-  .card:hover .more-thumb{ transform:scale(1.04); }
+  .more-thumb{ background:linear-gradient(160deg, var(--blue) 0%, var(--purple) 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; }
   .more-count{ font-family:'Poppins', sans-serif; font-weight:700; font-size:26px; color:#fff; }
   .more-label{ font-family:'Poppins', sans-serif; font-weight:600; font-size:13px; color:rgba(255,255,255,0.9); margin-top:2px; }
   .more-arrow{ width:38px; height:38px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.6); display:flex; align-items:center; justify-content:center; margin-top:14px; }
   .more-arrow svg{ width:16px; height:16px; }
+
+  /* ---------- DETAIL MODAL ---------- */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(4,4,8,0.7); z-index:100; display:flex; align-items:flex-start; justify-content:center; padding:0; opacity:0; pointer-events:none; transition:opacity 0.25s ease; overflow-y:auto; }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .modal-box{ width:100%; max-width:940px; background:var(--bg); margin:0 auto; min-height:100vh; box-shadow:0 30px 80px rgba(0,0,0,0.6); transform:translateY(24px) scale(0.98); transition:transform 0.3s cubic-bezier(.2,.8,.2,1); }
+  .modal-overlay.open .modal-box{ transform:translateY(0) scale(1); }
+  @media (min-width:1000px){ .modal-box{ margin:34px auto; min-height:auto; border-radius:16px; overflow:hidden; } }
+
+  .modal-hero{ position:relative; aspect-ratio:16/8; min-height:320px; display:flex; align-items:flex-end; background-size:cover; }
+  .modal-hero::after{ content:""; position:absolute; inset:0; background:linear-gradient(to top, var(--bg) 2%, rgba(10,10,20,0.15) 45%, rgba(10,10,20,0.55) 100%); }
+  .modal-close{ position:absolute; top:16px; right:16px; z-index:5; width:36px; height:36px; border-radius:50%; border:none; background:rgba(10,10,20,0.55); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.15s ease; }
+  .modal-close:hover{ background:rgba(10,10,20,0.85); }
+  .modal-close svg{ width:18px; height:18px; }
+  .modal-hero-inner{ position:relative; z-index:2; padding:26px 32px 26px; width:100%; }
+  .modal-badge{ font-family:'Poppins', sans-serif; font-size:11px; font-weight:600; letter-spacing:0.3px; color:var(--text-secondary); margin-bottom:6px; }
+  .modal-title{ font-family:'Poppins', sans-serif; font-weight:700; font-size:clamp(24px, 4vw, 36px); line-height:1.12; margin-bottom:10px; max-width:600px; }
+  .modal-tagline{ font-family:'Poppins', sans-serif; font-size:13px; font-weight:600; background:linear-gradient(100deg, #5b8cff, #b06bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:12px; }
+  .modal-meta{ font-size:12.5px; color:var(--text-secondary); margin-bottom:12px; }
+  .modal-meta span.dot{ display:inline-block; width:4px; height:4px; border-radius:50%; background:var(--text-muted); margin:0 8px; vertical-align:middle; }
+  .modal-desc{ font-size:13.5px; color:var(--text-secondary); line-height:1.7; max-width:560px; margin-bottom:14px; }
+  .modal-tags{ font-family:'Poppins', sans-serif; font-size:13px; font-weight:600; margin-bottom:14px; }
+  .modal-tags span:not(:last-child)::after{ content:"|"; margin:0 8px; color:var(--text-muted); font-weight:400; }
+  .modal-pills{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .modal-pill{ font-family:'Poppins', sans-serif; font-size:12px; font-weight:600; padding:6px 14px; border-radius:20px; background:rgba(245,244,250,0.1); color:var(--text-secondary); }
+  .modal-pill.active{ background:rgba(245,244,250,0.9); color:#0A0A14; }
+  .modal-actions{ display:flex; align-items:center; gap:12px; }
+  .modal-watch{ display:flex; align-items:center; gap:10px; background:var(--grad); color:#fff; font-family:'Poppins', sans-serif; font-weight:600; font-size:14px; padding:12px 22px; border-radius:8px; border:none; cursor:pointer; }
+  .modal-watch svg{ width:16px; height:16px; flex-shrink:0; }
+  .modal-watch .ep-tag{ font-size:11.5px; font-weight:500; opacity:0.85; border-left:1px solid rgba(255,255,255,0.4); padding-left:10px; }
+  .modal-add{ width:42px; height:42px; border-radius:8px; background:rgba(245,244,250,0.12); border:none; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .modal-add svg{ width:18px; height:18px; }
+
+  .modal-tabs{ display:flex; gap:28px; padding:24px 32px 0; border-bottom:1px solid var(--hairline); }
+  .modal-tab{ background:none; border:none; font-family:'Poppins', sans-serif; font-size:14px; font-weight:600; color:var(--text-muted); padding:0 0 14px; cursor:pointer; border-bottom:2px solid transparent; }
+  .modal-tab.active{ color:var(--text-primary); border-bottom-color:var(--pink); }
+
+  .modal-panel{ padding:22px 32px 40px; display:none; }
+  .modal-panel.active{ display:block; }
+  .modal-panel h3{ font-family:'Poppins', sans-serif; font-weight:600; font-size:16px; margin-bottom:16px; }
+  .modal-scene{ display:flex; gap:16px; margin-bottom:22px; }
+  .modal-scene .sthumb{ flex:0 0 auto; width:140px; aspect-ratio:16/9; border-radius:10px; position:relative; overflow:hidden; }
+  .modal-scene .sthumb .play{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .modal-scene .sthumb .play svg{ width:22px; height:22px; }
+  .modal-scene .stitle{ font-family:'Poppins', sans-serif; font-weight:600; font-size:14.5px; margin-bottom:4px; }
+  .modal-scene .smeta{ font-size:11.5px; color:var(--purple); font-weight:600; margin-bottom:6px; }
+  .modal-scene .sdesc{ font-size:12.5px; color:var(--text-secondary); line-height:1.6; }
+
+  .modal-more-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:14px; }
+  .modal-more-item{ cursor:pointer; }
+  .modal-more-item .thumb{ aspect-ratio:16/9; border-radius:10px; margin-bottom:8px; transition:transform 0.2s ease; }
+  .modal-more-item:hover .thumb{ transform:scale(1.05); }
+  .modal-more-item .title{ font-family:'Poppins', sans-serif; font-size:12.5px; font-weight:500; }
+
+  body.modal-locked{ overflow:hidden; }
 
   /* ---------- ABOUT (profile card style) ---------- */
   #about{ padding:20px 44px 50px; }
@@ -151,14 +213,86 @@
 
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
-    .card .thumb, .card .thumb .play, .btn-primary, .btn-secondary, .submit-btn{ transition:none; }
+    .card, .card .thumb, .card .thumb .play, .top10-item .thumb, .btn-primary, .btn-secondary, .submit-btn{ transition:none; }
   }
 
   @media (max-width: 860px){
-    header, .hero-inner, .row-head, .card-row, #about, #contact{ padding-left:22px; padding-right:22px; }
-    nav a{ display:none; }
-    .about-card{ grid-template-columns:1fr; text-align:left; }
+    header{ padding:16px 22px; }
+    .hero-inner, .hero-dots, .row-head, .card-row, .top10-row, #about, #contact{ padding-left:22px; padding-right:22px; }
+
+    .nav-toggle{ display:flex; }
+    .nav-scrim{ display:block; }
+    nav{ position:fixed; top:0; right:0; bottom:0; width:min(80vw, 320px); height:100vh; height:100dvh; background:var(--bg-elevated); flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:6px; padding:88px 26px 26px; padding-top:calc(88px + env(safe-area-inset-top)); transform:translateX(100%); transition:transform 0.3s cubic-bezier(.2,.8,.2,1); z-index:40; box-shadow:-16px 0 40px rgba(0,0,0,0.5); }
+    nav.open{ transform:translateX(0); }
+    nav a{ display:block; width:100%; padding:12px 0; font-size:15.5px; border-bottom:1px solid var(--hairline); }
+    nav a.enquire-btn{ border-bottom:none; text-align:center; margin-top:10px; padding:12px 20px; }
+    body.nav-locked{ overflow:hidden; }
+
+    #hero{ min-height:auto; padding-top:34px; padding-bottom:8px; }
+    .hero-inner{ max-width:100%; padding-bottom:20px; }
+    .hero-actions{ flex-wrap:wrap; }
+    .btn-primary, .btn-secondary{ padding:11px 18px; font-size:13.5px; }
+
+    .top10-row{ gap:26px; padding-top:6px; padding-bottom:14px; }
+    .top10-rank{ font-size:72px; margin-right:-10px; }
+    .top10-item .thumb{ width:230px; }
+
+    .card{ width:250px; }
+    .card.portrait{ width:190px; }
+
+    .about-card{ grid-template-columns:1fr; text-align:left; padding:26px; }
+    .avatar{ width:76px; height:76px; }
+    .about-stats{ flex-wrap:wrap; gap:20px; }
+
+    .cta-band{ padding:28px 22px; }
     form{ grid-template-columns:1fr; }
+    input, select, textarea{ font-size:16px; }
+
+    footer{ padding:20px 22px; justify-content:center; text-align:center; }
+
+    .modal-box{ min-height:100dvh; }
+    .modal-hero{ aspect-ratio:auto; min-height:44vh; }
+    .modal-hero-inner{ padding:20px 22px 22px; }
+    .modal-tabs{ padding:18px 22px 0; gap:20px; }
+    .modal-panel{ padding:18px 22px 32px; }
+    .modal-more-grid{ grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; }
+  }
+
+  @media (max-width: 640px){
+    h1{ font-size:clamp(26px, 7vw, 34px); }
+    .hero-meta{ flex-wrap:wrap; row-gap:6px; }
+    .top10-rank{ font-size:56px; }
+    .top10-item .thumb{ width:180px; }
+    .row-head h2{ font-size:16.5px; }
+    .card{ width:210px; }
+    .card.portrait{ width:160px; }
+    .edge-arrow{ width:44px; }
+    .modal-title{ font-size:22px; }
+    .modal-scene{ gap:12px; }
+    .modal-scene .sthumb{ width:110px; }
+    .modal-tab{ font-size:13px; }
+    .modal-watch{ padding:11px 18px; font-size:13px; }
+  }
+
+  @media (max-width: 420px){
+    header{ padding:14px 16px; }
+    .hero-inner, .hero-dots, .row-head, .card-row, .top10-row, #about, #contact{ padding-left:16px; padding-right:16px; }
+    .brand span{ font-size:15.5px; }
+    .top10-row{ gap:18px; }
+    .top10-rank{ font-size:44px; -webkit-text-stroke:2px rgba(245,244,250,0.5); }
+    .top10-item .thumb{ width:150px; }
+    .card{ width:180px; }
+    .card.portrait{ width:140px; }
+    .card .title{ font-size:12.5px; }
+    .card .sub{ font-size:10.5px; }
+    .about-card{ padding:20px; }
+    .cta-band{ padding:22px 16px; }
+    .cta-band h2{ font-size:22px; }
+    .modal-hero-inner, .modal-tabs, .modal-panel{ padding-left:16px; padding-right:16px; }
+    .modal-scene{ flex-direction:column; }
+    .modal-scene .sthumb{ width:100%; }
+    .modal-pills{ gap:6px; }
+    .modal-pill{ font-size:11px; padding:5px 11px; }
   }
 </style>
 </head>
@@ -169,7 +303,12 @@
     <span class="mark"></span>
     <span>Studio Frame</span>
   </div>
-  <nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mainNav">
+    <svg class="icon-burger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="nav-scrim" id="navScrim"></div>
+  <nav id="mainNav">
     <a href="#work">Weddings</a>
     <a href="#work">Portraits</a>
     <a href="#work">Films</a>
@@ -219,11 +358,11 @@
   <div class="row-section">
     <div class="row-head"><h2>Top shoots this year</h2></div>
     <div class="top10-row">
-      <div class="top10-item"><span class="top10-rank">1</span><div class="thumb c1"></div></div>
-      <div class="top10-item"><span class="top10-rank">2</span><div class="thumb c2"></div></div>
-      <div class="top10-item"><span class="top10-rank">3</span><div class="thumb c3"></div></div>
-      <div class="top10-item"><span class="top10-rank">4</span><div class="thumb c4"></div></div>
-      <div class="top10-item"><span class="top10-rank">5</span><div class="thumb c7"></div></div>
+      <div class="top10-item" data-title="Aarav &amp; Meera" data-meta="2026 · Udaipur · Full Wedding Film · 4K" data-desc="A documentary-style edit of a three-day wedding — candid coverage, no staged re-shoots, edited by hand from start to finish." data-tags="Documentary,Cinematic,Candid" data-pills="Full Coverage,Drone Footage,Traditional Rituals" data-cta="Watch full film" data-thumb="c1"><span class="top10-rank">1</span><div class="thumb c1"></div></div>
+      <div class="top10-item" data-title="Ritu &amp; Kabir" data-meta="2025 · Goa · Highlight Film" data-desc="Sea breeze, string lights, and a ceremony shot entirely handheld to stay close to the moment." data-tags="Beach Wedding,Highlight Film,Destination" data-pills="Destination,Handheld,Candid" data-cta="Watch highlight film" data-thumb="c2"><span class="top10-rank">2</span><div class="thumb c2"></div></div>
+      <div class="top10-item" data-title="Priya &amp; Dev" data-meta="2025 · Jaipur · Full Wedding Film" data-desc="Three generations, one courtyard, and a film cut to feel exactly like being there." data-tags="Haveli Wedding,Traditional,Full Film" data-pills="Traditional Rituals,Multi-day,Candid" data-cta="Watch full film" data-thumb="c3"><span class="top10-rank">3</span><div class="thumb c3"></div></div>
+      <div class="top10-item" data-title="Reception night" data-meta="2025 · Full Film · 04:12 · 4K" data-desc="The dance floor, the toasts, and the 2 a.m. dhol circle — the full cut of the night as it happened." data-tags="Reception,Full Film,4K" data-pills="Full Coverage,Low Light,Multi-cam" data-cta="Watch full film" data-thumb="c4"><span class="top10-rank">4</span><div class="thumb c4"></div></div>
+      <div class="top10-item" data-title="Engagement session" data-meta="Warangal · Engagement" data-desc="A relaxed engagement shoot around the old quarter of the city." data-tags="Engagement,Portrait,Candid" data-pills="Candid,Natural Light,Relaxed Pace" data-cta="Watch the reel" data-thumb="c7"><span class="top10-rank">5</span><div class="thumb c7"></div></div>
     </div>
   </div>
 
@@ -233,10 +372,10 @@
       <button class="edge-arrow left" data-target="weddingsRow" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button class="edge-arrow right" data-target="weddingsRow" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="card-row" id="weddingsRow">
-        <div class="card"><div class="thumb c1"><span class="badge">FEATURED</span><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Aarav &amp; Meera</div><div class="sub">Udaipur · 2026</div></div></div>
-        <div class="card"><div class="thumb c2"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Ritu &amp; Kabir</div><div class="sub">Goa · 2025</div></div></div>
-        <div class="card"><div class="thumb c3"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Priya &amp; Dev</div><div class="sub">Jaipur · 2025</div></div></div>
-        <div class="card portrait"><div class="thumb c4"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Sana &amp; Farhan</div><div class="sub">Hyderabad · 2025</div></div></div>
+        <div class="card" data-title="Aarav &amp; Meera" data-meta="2026 · Udaipur · Full Wedding Film · 4K" data-desc="A documentary-style edit of a three-day wedding — candid coverage, no staged re-shoots, edited by hand from start to finish." data-tags="Documentary,Cinematic,Candid" data-pills="Full Coverage,Drone Footage,Traditional Rituals" data-cta="Watch full film" data-thumb="c1"><div class="thumb c1"><span class="badge">FEATURED</span><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Aarav &amp; Meera</div><div class="sub">Udaipur · 2026</div></div></div>
+        <div class="card" data-title="Ritu &amp; Kabir" data-meta="2025 · Goa · Highlight Film" data-desc="Sea breeze, string lights, and a ceremony shot entirely handheld to stay close to the moment." data-tags="Beach Wedding,Highlight Film,Destination" data-pills="Destination,Handheld,Candid" data-cta="Watch highlight film" data-thumb="c2"><div class="thumb c2"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Ritu &amp; Kabir</div><div class="sub">Goa · 2025</div></div></div>
+        <div class="card" data-title="Priya &amp; Dev" data-meta="2025 · Jaipur · Full Wedding Film" data-desc="Three generations, one courtyard, and a film cut to feel exactly like being there." data-tags="Haveli Wedding,Traditional,Full Film" data-pills="Traditional Rituals,Multi-day,Candid" data-cta="Watch full film" data-thumb="c3"><div class="thumb c3"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Priya &amp; Dev</div><div class="sub">Jaipur · 2025</div></div></div>
+        <div class="card" data-title="Reception night" data-meta="2025 · Full Film · 04:12 · 4K" data-desc="The dance floor, the toasts, and the 2 a.m. dhol circle — the full cut of the night as it happened." data-tags="Reception,Full Film,4K" data-pills="Full Coverage,Low Light,Multi-cam" data-cta="Watch full film" data-thumb="c4"><div class="thumb c4"><span class="badge">4K</span><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Reception night</div><div class="sub">Full film · 04:12</div></div></div>
       </div>
     </div>
   </div>
@@ -247,10 +386,9 @@
       <button class="edge-arrow left" data-target="portraitsRow" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button class="edge-arrow right" data-target="portraitsRow" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="card-row" id="portraitsRow">
-        <div class="card"><div class="thumb c5"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Studio series</div><div class="sub">Warangal</div></div></div>
-        <div class="card"><div class="thumb c6"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Golden hour couples</div><div class="sub">Hyderabad</div></div></div>
-        <div class="card"><div class="thumb c7"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Engagement session</div><div class="sub">Warangal</div></div></div>
-        <div class="card portrait"><div class="thumb c8"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Family portraits</div><div class="sub">Karimnagar</div></div></div>
+        <div class="card portrait" data-title="Sana &amp; Farhan" data-meta="2025 · Hyderabad · Pre-Wedding" data-desc="An intimate portrait session before the big day, shot golden hour on a quiet rooftop." data-tags="Pre-Wedding,Portrait,Golden Hour" data-pills="Golden Hour,Rooftop,Candid" data-cta="Watch the reel" data-thumb="c4"><div class="thumb c4"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Sana &amp; Farhan</div><div class="sub">Hyderabad · 2025</div></div></div>
+        <div class="card portrait" data-title="Family portraits" data-meta="Karimnagar · Portrait Session" data-desc="Three generations gathered for a single frame — relaxed, warm, and unposed." data-tags="Family,Portrait,Session" data-pills="Natural Light,Studio,Relaxed Pace" data-cta="Watch the reel" data-thumb="c8"><div class="thumb c8"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Family portraits</div><div class="sub">Karimnagar</div></div></div>
+        <div class="card portrait" data-title="Highlight reel" data-meta="Short Film · 01:30" data-desc="A one-minute cut built for reels — the fastest way to feel the whole day." data-tags="Short Film,Reel,Highlights" data-pills="Fast Cut,Music-led,Vertical" data-cta="Watch the reel" data-thumb="c3"><div class="thumb c3"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Highlight reel</div><div class="sub">Short film · 01:30</div></div></div>
       </div>
     </div>
   </div>
@@ -261,10 +399,11 @@
       <button class="edge-arrow left" data-target="filmsRow" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button class="edge-arrow right" data-target="filmsRow" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="card-row" id="filmsRow">
-        <div class="card"><div class="thumb c4"><span class="badge">4K</span><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Reception night</div><div class="sub">Full film · 04:12</div></div></div>
-        <div class="card"><div class="thumb c1"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Getting ready</div><div class="sub">Short film · 02:05</div></div></div>
-        <div class="card"><div class="thumb c2"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Vows &amp; ceremony</div><div class="sub">Full film · 06:40</div></div></div>
-        <div class="card portrait"><div class="thumb c3"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Highlight reel</div><div class="sub">Short film · 01:30</div></div></div>
+        <div class="card" data-title="Getting ready" data-meta="Short Film · 02:05" data-desc="Nervous hands, last-minute jokes, and the quiet before the ceremony begins." data-tags="Short Film,Behind the Scenes" data-pills="Handheld,Natural Light,Documentary" data-cta="Watch short film" data-thumb="c1"><div class="thumb c1"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Getting ready</div><div class="sub">Short film · 02:05</div></div></div>
+        <div class="card" data-title="Vows &amp; ceremony" data-meta="Full Film · 06:40" data-desc="The full ceremony, shot on three cameras and cut without a single re-enactment." data-tags="Ceremony,Full Film,Multi-cam" data-pills="Multi-cam,Full Coverage,Traditional Rituals" data-cta="Watch full film" data-thumb="c2"><div class="thumb c2"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Vows &amp; ceremony</div><div class="sub">Full film · 06:40</div></div></div>
+        <div class="card" data-title="Studio series" data-meta="Warangal · Studio" data-desc="Studio-lit portraits exploring light, shadow, and stillness." data-tags="Studio,Editorial,Portrait" data-pills="Studio Light,Editorial,Minimal" data-cta="Watch the reel" data-thumb="c5"><div class="thumb c5"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Studio series</div><div class="sub">Warangal</div></div></div>
+        <div class="card" data-title="Golden hour couples" data-meta="Hyderabad · Couples Session" data-desc="Couples sessions timed to the last twenty minutes of daylight." data-tags="Couples,Golden Hour,Outdoor" data-pills="Golden Hour,Outdoor,Candid" data-cta="Watch the reel" data-thumb="c6"><div class="thumb c6"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Golden hour couples</div><div class="sub">Hyderabad</div></div></div>
+        <div class="card" data-title="Engagement session" data-meta="Warangal · Engagement" data-desc="A relaxed engagement shoot around the old quarter of the city." data-tags="Engagement,Portrait,Candid" data-pills="Candid,Natural Light,Relaxed Pace" data-cta="Watch the reel" data-thumb="c7"><div class="thumb c7"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div><div class="info"><div class="title">Engagement session</div><div class="sub">Warangal</div></div></div>
       </div>
     </div>
   </div>
@@ -329,6 +468,41 @@
   </div>
 </footer>
 
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <div class="modal-hero" id="modalHero">
+      <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="modal-hero-inner">
+        <div class="modal-badge">Studio Frame</div>
+        <h2 class="modal-title" id="modalTitle">Title</h2>
+        <div class="modal-tagline" id="modalTagline">Editor&rsquo;s pick</div>
+        <div class="modal-meta" id="modalMeta"></div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-tags" id="modalTags"></div>
+        <div class="modal-pills" id="modalPills"></div>
+        <div class="modal-actions">
+          <button class="modal-watch"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="modalCta">Watch now</span></button>
+          <button class="modal-add" aria-label="Add to shortlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-panel="details">Details</button>
+      <button class="modal-tab" data-panel="more">More Like This</button>
+    </div>
+
+    <div class="modal-panel active" id="panelDetails">
+      <h3>From this shoot</h3>
+      <div id="modalScenes"></div>
+    </div>
+    <div class="modal-panel" id="panelMore">
+      <h3>More like this</h3>
+      <div class="modal-more-grid" id="modalMoreGrid"></div>
+    </div>
+  </div>
+</div>
+
 <script>
   const slides = [
     { badge:"Featured story", title:"Aarav &amp; Meera — three days in Udaipur", year:"2026", format:"Full wedding film", desc:"A documentary-style edit of a three-day wedding — candid coverage, no staged re-shoots, edited by hand from start to finish." },
@@ -380,6 +554,119 @@
       const row = document.getElementById(btn.dataset.target);
       const dir = btn.classList.contains('left') ? -1 : 1;
       row.scrollBy({ left: dir * 320, behavior: 'smooth' });
+    });
+  });
+
+  /* ---------- MOBILE NAV ---------- */
+  const navToggle = document.getElementById('navToggle');
+  const mainNav = document.getElementById('mainNav');
+  const navScrim = document.getElementById('navScrim');
+
+  function setNavOpen(open){
+    mainNav.classList.toggle('open', open);
+    navScrim.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('nav-locked', open);
+  }
+
+  navToggle.addEventListener('click', () => setNavOpen(!mainNav.classList.contains('open')));
+  navScrim.addEventListener('click', () => setNavOpen(false));
+  document.addEventListener('click', (e) => {
+    if (mainNav.classList.contains('open') && !mainNav.contains(e.target) && !navToggle.contains(e.target)) {
+      setNavOpen(false);
+    }
+  });
+  mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setNavOpen(false); });
+
+  /* ---------- DETAIL MODAL ---------- */
+  const detailModal = document.getElementById('detailModal');
+  const modalHero = document.getElementById('modalHero');
+  const modalClose = document.getElementById('modalClose');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMeta = document.getElementById('modalMeta');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalTags = document.getElementById('modalTags');
+  const modalPills = document.getElementById('modalPills');
+  const modalCta = document.getElementById('modalCta');
+  const modalScenes = document.getElementById('modalScenes');
+  const modalMoreGrid = document.getElementById('modalMoreGrid');
+
+  const sceneLibrary = [
+    { title:'Getting ready', meta:'Scene 1', desc:'The calm before it all begins — details, nerves, and last checks.' },
+    { title:'The ceremony', meta:'Scene 2', desc:'The heart of the day, shot wide and close at once to hold every reaction.' },
+    { title:'Reception & send-off', meta:'Scene 3', desc:'Dancing, toasts, and the walk to the car as the night winds down.' }
+  ];
+
+  function collectCardEls(){
+    return Array.from(document.querySelectorAll('.card[data-title], .top10-item[data-title]'));
+  }
+
+  function openModalFromEl(el){
+    const d = el.dataset;
+    modalHero.className = 'modal-hero ' + (d.thumb || 'c1');
+    modalTitle.innerHTML = d.title || '';
+    modalMeta.textContent = d.meta || '';
+    modalDesc.textContent = d.desc || '';
+    modalCta.textContent = d.cta || 'Watch now';
+
+    modalTags.innerHTML = '';
+    (d.tags || '').split(',').filter(Boolean).forEach(t => {
+      const span = document.createElement('span');
+      span.textContent = t.trim();
+      modalTags.appendChild(span);
+    });
+
+    modalPills.innerHTML = '';
+    (d.pills || '').split(',').filter(Boolean).forEach((p, i) => {
+      const span = document.createElement('span');
+      span.className = 'modal-pill' + (i === 0 ? ' active' : '');
+      span.textContent = p.trim();
+      modalPills.appendChild(span);
+    });
+
+    modalScenes.innerHTML = '';
+    sceneLibrary.forEach(scene => {
+      const row = document.createElement('div');
+      row.className = 'modal-scene';
+      row.innerHTML = `<div class="sthumb ${d.thumb || 'c1'}"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div><div class="stitle">${scene.title}</div><div class="smeta">${scene.meta}</div><div class="sdesc">${scene.desc}</div></div>`;
+      modalScenes.appendChild(row);
+    });
+
+    modalMoreGrid.innerHTML = '';
+    collectCardEls().filter(c => c !== el).sort(() => Math.random() - 0.5).slice(0, 6).forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'modal-more-item';
+      item.innerHTML = `<div class="thumb ${c.dataset.thumb || 'c1'}"></div><div class="title">${c.dataset.title || ''}</div>`;
+      item.addEventListener('click', () => openModalFromEl(c));
+      modalMoreGrid.appendChild(item);
+    });
+
+    document.querySelectorAll('.modal-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+    document.querySelectorAll('.modal-panel').forEach((p, i) => p.classList.toggle('active', i === 0));
+
+    detailModal.classList.add('open');
+    document.body.classList.add('modal-locked');
+  }
+
+  function closeModal(){
+    detailModal.classList.remove('open');
+    document.body.classList.remove('modal-locked');
+  }
+
+  collectCardEls().forEach(el => {
+    el.addEventListener('click', () => openModalFromEl(el));
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  detailModal.addEventListener('click', (e) => { if (e.target === detailModal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  document.querySelectorAll('.modal-tab').forEach((tab, i) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.modal-tab').forEach((t, j) => t.classList.toggle('active', j === i));
+      document.querySelectorAll('.modal-panel').forEach((p, j) => p.classList.toggle('active', j === i));
     });
   });
 </script>
